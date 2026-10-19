@@ -1,0 +1,17 @@
+{
+  "miniprogramRoot": "dist/",
+  "cloudfunctionRoot": "cloud/functions/",
+  "projectname": "scorad-miniapp",
+  "description": "SCORAD 评估工具",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.4.0"
+}

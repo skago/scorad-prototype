@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SCORAD 评估工具 / SCORAD Assessment Tool</title>
+  <link rel="stylesheet" href="css/style.css?v=5" />
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <h1>SCORAD 评估工具</h1>
+      <div class="subtitle">SCORAD Assessment Tool · v1.0-draft</div>
+      <span class="local-note">本地计算 · 数据不上传</span>
+      <div id="user-bar" class="user-bar" style="display:none;">
+        <span id="user-name" class="user-name"></span>
+        <button class="btn btn-ghost btn-sm" id="btn-logout">退出登录</button>
+      </div>
+    </header>
+
+    <!-- ===================== 微信登录 ===================== -->
+    <section id="screen-login" class="screen">
+      <div class="card login-card">
+        <h2 style="font-size:18px;margin-bottom:8px;text-align:center;">微信登录</h2>
+        <p style="color:var(--text-muted);font-size:14px;text-align:center;margin-bottom:24px;">
+          使用微信账号登录后即可使用 SCORAD 评估功能
+        </p>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+          <div class="wechat-icon" aria-hidden="true">
+            <svg viewBox="0 0 1024 1024" width="64" height="64" fill="#07c160">
+              <path d="M664.250054 368.541681c10.015098 0 19.892049 0.732687 29.67281 1.795902-26.647917-122.810047-159.358451-214.077709-310.826188-214.077709-169.542864 0-308.085665 114.272345-308.085665 259.274068 0 83.708473 46.165436 152.468372 123.281791 205.78483l-30.808567 91.730702 107.549846-53.739858c38.510762 7.524909 69.526588 15.385291 108.062595 15.385291 9.629048 0 19.132281-0.427351 28.52506-1.125835-6.023764-20.365756-9.518531-41.723025-9.518531-63.86731C402.103173 476.632451 517.285163 368.541681 664.250054 368.541681zM498.62897 285.87389c23.200378 0 38.510762 15.192393 38.510762 38.621279 0 23.321313-15.310384 38.601283-38.510762 38.601283-23.101311 0-46.262776-15.280034-46.262776-38.601283C452.366194 301.066283 475.527659 285.87389 498.62897 285.87389zM283.016301 363.096452c-23.101311 0-46.402737-15.280034-46.402737-38.601283 0-23.428886 23.301426-38.621279 46.402737-38.621279 23.092562 0 38.491274 15.192393 38.491274 38.621279C321.507575 347.816418 306.108863 363.096452 283.016301 363.096452zM945.449134 606.227962c0-121.886077-123.176829-221.821291-275.835095-221.821291-152.649288 0-276.567733 99.935214-276.567733 221.821291 0 122.094695 123.918445 221.811854 276.567733 221.811854 30.808567 0 61.517542-7.701552 92.277619-15.385291l84.498981 45.925714-23.101311-76.52966C899.428458 736.864613 945.449134 675.304397 945.449134 606.227962zM584.71861 567.567032c-15.300702 0-30.808567-15.192393-30.808567-30.919081 0-15.42026 15.507865-30.808567 30.808567-30.808567 23.200378 0 38.510762 15.388307 38.510762 30.808567C623.229372 552.374639 607.918988 567.567032 584.71861 567.567032zM769.127372 567.567032c-15.40085 0-30.808567-15.192393-30.808567-30.919081 0-15.42026 15.407717-30.808567 30.808567-30.808567 23.092562 0 38.601283 15.388307 38.601283 30.808567C807.728655 552.374639 792.219934 567.567032 769.127372 567.567032z"/>
+            </svg>
+          </div>
+          <button class="btn btn-wechat btn-block" id="btn-wechat-login">微信一键登录</button>
+          <p style="font-size:12px;color:var(--text-muted);text-align:center;max-width:280px;">
+            登录即表示同意《用户协议》与《隐私政策》。本工具仅支持微信账号登录。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 首页 ===================== -->
+    <section id="screen-home" class="screen">
+      <div class="card">
+        <h2 style="font-size:18px;margin-bottom:8px;">特应性皮炎严重度标准化评分</h2>
+        <p style="color:var(--text-muted);font-size:14px;">
+          支持标准 SCORAD（0–103）与客观 SCORAD oSCORAD（0–83）。
+          适用于临床评估、随访、教学与科研数据采集。
+        </p>
+        <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;background:var(--primary-light);border:1px solid var(--primary);border-radius:6px;padding:10px 14px;">
+          <div style="font-size:13px;color:var(--primary-dark);">
+            <strong>科研模式</strong> · 开启后记录研究项目、中心、评估者等字段
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="research-mode-toggle" />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <div class="alert alert-info" style="margin-top:16px;">
+          本工具用于标准化评分计算、记录及科研辅助，<strong>不用于单独诊断</strong>，不能替代专业医疗判断。
+        </div>
+        <div class="home-actions">
+          <button class="btn btn-primary btn-block" data-nav="step1">开始评估</button>
+          <button class="btn btn-secondary btn-block" data-nav="history">历史记录</button>
+          <button class="btn btn-ghost btn-block" data-nav="guide">评分指南</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 评分指南 ===================== -->
+    <section id="screen-guide" class="screen" style="display:none;">
+      <div class="card">
+        <h2 style="font-size:18px;margin-bottom:12px;">评分指南</h2>
+        <div style="font-size:14px;line-height:1.8;">
+          <p><strong>SCORAD = A/5 + 7B/2 + C</strong></p>
+          <p><strong>oSCORAD = A/5 + 7B/2</strong>（去除主观症状 C）</p>
+          <ul style="margin-left:20px;margin-top:8px;">
+            <li><strong>A（Extent）</strong>：AD 炎症性皮损占体表面积百分比，0–100</li>
+            <li><strong>B（Intensity）</strong>：6 项客观体征之和（红斑、水肿/丘疹、渗出/结痂、抓痕、苔藓化、干燥），每项 0–3</li>
+            <li><strong>C（Subjective）</strong>：瘙痒 + 睡眠影响，各 0–10</li>
+          </ul>
+          <p style="margin-top:12px;"><strong>严重度分层</strong>：＜25 轻度；25–50 中度；＞50 重度（常用临床/研究分层）</p>
+          <p style="margin-top:12px;"><strong>代表区域</strong>：选择能代表该体征整体严重程度的典型区域，不应单纯选择最严重皮损。</p>
+          <p style="margin-top:8px;"><strong>Dryness</strong>：应在非炎症性皮肤区域评价。</p>
+          <p style="margin-top:8px;"><strong>回顾期</strong>：瘙痒/睡眠影响评价最近 3 天 / 3 夜。</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" data-nav="home">返回首页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Step 1: 记录信息 ===================== -->
+    <section id="screen-step1" class="screen" style="display:none;">
+      <div class="step-indicator">
+        <div class="step-item active"><div class="step-dot">1</div><div class="step-label">记录信息</div></div>
+        <div class="step-item"><div class="step-dot">2</div><div class="step-label">Extent</div></div>
+        <div class="step-item"><div class="step-dot">3</div><div class="step-label">Intensity</div></div>
+        <div class="step-item"><div class="step-dot">4</div><div class="step-label">Subjective</div></div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:18px;margin-bottom:16px;">第一步：记录信息</h2>
+        <div class="form-group">
+          <label>评估时间 <span style="color:var(--severe)">*</span></label>
+          <input type="datetime-local" id="f-assessed_at" required />
+        </div>
+        <div class="form-group">
+          <label>患者姓名</label>
+          <input type="text" id="f-patient_name" placeholder="选填" />
+        </div>
+        <div class="form-group">
+          <label>患者性别</label>
+          <select id="f-patient_gender">
+            <option value="">请选择</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>患者年龄</label>
+          <input type="number" id="f-patient_age" min="0" max="150" placeholder="选填" />
+        </div>
+        <div class="form-group">
+          <label>患者编号</label>
+          <input type="text" id="f-patient_id" placeholder="选填" />
+        </div>
+        <div class="form-group">
+          <label>就诊时间 <span style="color:var(--text-muted);font-weight:400;">（格式：第几周）</span></label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="color:var(--text-muted);">第</span>
+            <input type="number" id="f-visit_week" min="1" max="520" placeholder="周数" style="flex:1;" />
+            <span style="color:var(--text-muted);">周</span>
+          </div>
+        </div>
+
+        <div id="research-fields" style="display:none;">
+          <div style="font-size:13px;font-weight:600;color:var(--primary-dark);margin:16px 0 12px;padding:8px 12px;background:var(--primary-light);border-radius:6px;">
+            科研信息（选填）
+          </div>
+          <div class="form-group">
+            <label>研究项目编号</label>
+            <input type="text" id="f-research_project_id" placeholder="如 AD-RCT-2026-001" />
+          </div>
+          <div class="form-group">
+            <label>中心编号</label>
+            <input type="text" id="f-center_id" placeholder="多中心研究分中心代码" />
+          </div>
+          <div class="form-group">
+            <label>受试者筛选号 <span class="hint" style="font-weight:400;">建议替代真实姓名</span></label>
+            <input type="text" id="f-subject_screening_no" placeholder="如 S001" />
+          </div>
+          <div class="form-group">
+            <label>评估者 ID</label>
+            <input type="text" id="f-evaluator_id" placeholder="执行评估的医生/研究者编号" />
+          </div>
+          <div class="form-group">
+            <label>评估者资质</label>
+            <select id="f-evaluator_qualification">
+              <option value="">请选择</option>
+              <option value="住院医师">住院医师</option>
+              <option value="主治医师">主治医师</option>
+              <option value="副主任医师">副主任医师</option>
+              <option value="主任医师">主任医师</option>
+              <option value="研究员">研究员</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>盲法标记</label>
+            <select id="f-blinding">
+              <option value="">请选择</option>
+              <option value="开放">开放</option>
+              <option value="单盲">单盲</option>
+              <option value="双盲">双盲</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>数据来源</label>
+            <select id="f-data_source">
+              <option value="">请选择</option>
+              <option value="直接评估">直接评估</option>
+              <option value="病历转录">病历转录</option>
+              <option value="患者自评">患者自评</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row action-bar">
+          <button class="btn btn-ghost" data-nav="home">取消</button>
+          <button class="btn btn-primary" style="margin-left:auto;" id="btn-step1-next">下一步</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Step 2: Extent (A) ===================== -->
+    <section id="screen-step2" class="screen" style="display:none;">
+      <div class="step-indicator">
+        <div class="step-item done"><div class="step-dot">✓</div><div class="step-label">记录信息</div></div>
+        <div class="step-item active"><div class="step-dot">2</div><div class="step-label">Extent</div></div>
+        <div class="step-item"><div class="step-dot">3</div><div class="step-label">Intensity</div></div>
+        <div class="step-item"><div class="step-dot">4</div><div class="step-label">Subjective</div></div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:18px;margin-bottom:8px;">第二步：皮损面积 A（Extent）</h2>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">
+          按身体部位分组选择受累面积百分比，A 值为各部位之和，范围 0–100%。
+        </p>
+        <div class="alert alert-info">
+          参考成人 Rule of Nines 估算各部位体表面积占比，选择各部位受累百分比。
+        </div>
+
+        <div id="body-parts"></div>
+
+        <div style="background:var(--primary-light);border:1px solid var(--primary);border-radius:6px;padding:14px 16px;margin-top:16px;text-align:center;">
+          <span style="font-size:14px;color:var(--primary-dark);">皮损面积合计 A =</span>
+          <span id="extent-total" style="font-size:28px;font-weight:800;color:var(--primary-dark);margin-left:8px;">0</span>
+          <span style="font-size:14px;color:var(--primary-dark);">%</span>
+        </div>
+
+        <div class="btn-row action-bar">
+          <button class="btn btn-ghost" id="btn-step2-back">上一步</button>
+          <button class="btn btn-primary" style="margin-left:auto;" id="btn-step2-next">下一步</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Step 3: Intensity (B1-B6) ===================== -->
+    <section id="screen-step3" class="screen" style="display:none;">
+      <div class="step-indicator">
+        <div class="step-item done"><div class="step-dot">✓</div><div class="step-label">记录信息</div></div>
+        <div class="step-item done"><div class="step-dot">✓</div><div class="step-label">Extent</div></div>
+        <div class="step-item active"><div class="step-dot">3</div><div class="step-label">Intensity</div></div>
+        <div class="step-item"><div class="step-dot">4</div><div class="step-label">Subjective</div></div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:18px;margin-bottom:8px;">第三步：客观皮损强度 B（Intensity）</h2>
+        <div class="alert alert-warn">
+          请选择能代表该体征<strong>整体严重程度</strong>的典型区域，不应单纯选择最严重皮损。不同体征可基于不同代表区域判断。
+        </div>
+
+        <div id="b-items"></div>
+
+        <div class="btn-row action-bar">
+          <button class="btn btn-ghost" id="btn-step3-back">上一步</button>
+          <button class="btn btn-primary" style="margin-left:auto;" id="btn-step3-next">下一步</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Step 4: Subjective (C) ===================== -->
+    <section id="screen-step4" class="screen" style="display:none;">
+      <div class="step-indicator">
+        <div class="step-item done"><div class="step-dot">✓</div><div class="step-label">记录信息</div></div>
+        <div class="step-item done"><div class="step-dot">✓</div><div class="step-label">Extent</div></div>
+        <div class="step-item done"><div class="step-dot">✓</div><div class="step-label">Intensity</div></div>
+        <div class="step-item active"><div class="step-dot">4</div><div class="step-label">Subjective</div></div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:18px;margin-bottom:8px;">第四步：主观症状 C（Subjective Symptoms）</h2>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">
+          回顾时间窗：最近 3 天 / 3 夜。范围 0–10，步长 0.1。
+        </p>
+
+        <div class="form-group">
+          <label>瘙痒 Pruritus <span style="color:var(--severe)">*</span></label>
+          <span class="hint">综合评价最近 3 天的瘙痒程度</span>
+          <div class="slider-row">
+            <input type="range" id="f-pruritus" min="0" max="10" step="0.1" value="0" />
+            <span class="slider-val" id="v-pruritus">0.0</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>睡眠影响 Sleep loss <span style="color:var(--severe)">*</span></label>
+          <span class="hint">综合评价最近 3 夜因 AD 导致的睡眠影响</span>
+          <div class="slider-row">
+            <input type="range" id="f-sleep_loss" min="0" max="10" step="0.1" value="0" />
+            <span class="slider-val" id="v-sleep_loss">0.0</span>
+          </div>
+        </div>
+
+        <div class="btn-row action-bar">
+          <button class="btn btn-ghost" id="btn-step4-back">上一步</button>
+          <button class="btn btn-primary" style="margin-left:auto;" id="btn-calculate">计算 SCORAD</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 结果页 ===================== -->
+    <section id="screen-result" class="screen" style="display:none;">
+      <div class="card">
+        <div class="result-hero">
+          <div class="result-score"><span id="r-scorad">0</span><span class="unit"> / 103</span></div>
+          <div class="result-oscore">客观 SCORAD（oSCORAD）：<span id="r-oscore">0</span> / 83</div>
+          <div id="r-severity" class="severity-badge severity-mild">轻度 Mild</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:12px;">评分明细</h3>
+        <table class="breakdown">
+          <thead>
+            <tr><th>项目</th><th style="text-align:right;">原始值</th><th style="text-align:right;">加权值</th></tr>
+          </thead>
+          <tbody id="r-breakdown"></tbody>
+        </table>
+        <div class="formula" id="r-formula"></div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">
+          算法版本：<span id="r-algo-ver"></span> · 分层版本：<span id="r-sev-ver"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:12px;">操作</h3>
+        <div class="btn-row action-bar" style="margin-top:0;">
+          <button class="btn btn-primary" id="btn-save">保存记录</button>
+          <button class="btn btn-secondary" id="btn-export-csv">导出 CSV</button>
+          <button class="btn btn-ghost" id="btn-restart">重新评估</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 历史记录 ===================== -->
+    <section id="screen-history" class="screen" style="display:none;">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h2 style="font-size:18px;">历史记录</h2>
+          <button class="btn btn-secondary" id="btn-export-all" style="padding:8px 16px;font-size:13px;">导出全部 CSV</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-nav="home">返回首页</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="js/engine.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
+</body>
+</html>

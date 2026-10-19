@@ -1,0 +1,30 @@
+.title {
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 12px;
+}
+.desc {
+  display: block;
+  font-size: 26px;
+  color: #6b7a8f;
+  line-height: 1.6;
+}
+.alert {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: #e3f2fd;
+  border-left: 8px solid #1565c0;
+  border-radius: 12px;
+  font-size: 24px;
+  color: #0d47a1;
+}
+.btn-primary {
+  margin-top: 32px;
+  width: 100%;
+}
+.btn-default {
+  margin-top: 16px;
+  width: 100%;
+}

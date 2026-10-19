@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.env.local
+.env.*.local
+
+# vue-tsc -b 构建产物
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
