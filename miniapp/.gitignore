@@ -2,3 +2,6 @@ node_modules
 dist
 .DS_Store
 *.log
+
+# SWC 编译缓存
+.swc/
