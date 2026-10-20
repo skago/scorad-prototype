@@ -193,9 +193,9 @@ export class LocalStorageAdapter implements StorageAdapter {
 | `scorad_user_v1` | 登录用户信息（小程序 openid） |
 | `scorad_research_mode` | 科研模式开关（"1"/"0"） |
 
-### 4.4 方案 B：CloudStorageAdapter（✅ 已实现，默认关闭）
+### 4.4 方案 B：CloudStorageAdapter（✅ 已实现；小程序端已启用，Web 端预留）
 
-> **状态（2026-10-19）**：两端均已实现，工厂开关默认 `USE_CLOUD = false`（纯本地行为）。启用条件见第十节。
+> **状态（2026-10-20）**：小程序端**已启用**——微信云开发免费环境 `cloud1-d1gvx0dpzae6aede6`（微信体验版）已开通，集合 `assessment_records`（仅创建者可读写）与 login 云函数已部署，端到端验证通过（保存 → 云端出现记录，`_openid` 自动写入）。Web 端仍未启用（匿名登录方案代码就绪，需单独开通 CloudBase 环境）。
 
 采用**组合模式**（内部持有本地适配器），两端实现逐字对齐：
 
@@ -411,16 +411,18 @@ miniapp/
 
 ## 十、启用方案 B 的步骤（代码已就绪，仅剩用户操作）
 
+> **小程序端 1～3 步已于 2026-10-20 全部完成**。当前唯一注意事项：所用环境为**免费体验版**（40,000 资源点/月，自开通日起 6 个月体验期，约 2027-04-20 到期）。到期后二选一：升级基础套餐（¥19.9/月），或 `USE_CLOUD` 置回 `false` 退回纯本地（数据在本机与云端各存一份，不受影响）。
+
 代码侧已全部实现（见 4.4），业务代码零修改。剩余启用步骤均为用户操作：
 
-1. **开通微信云开发**：小程序后台开通，获得环境 ID；创建集合 `assessment_records`（权限：**仅创建者可读写**）
-2. **部署 login 云函数**：微信开发者工具中右键 `miniapp/cloud/functions/login` →「上传并部署：云端安装依赖」
-3. **小程序端启用**：`miniapp/src/config/cloud.ts` 填入 `ENV_ID`；`miniapp/src/storage/index.ts` 置 `USE_CLOUD = true`
-4. **Web 端启用（可选，独立云环境）**：
+1. ~~**开通微信云开发**：小程序后台开通，获得环境 ID；创建集合 `assessment_records`（权限：**仅创建者可读写**）~~ ✅ 2026-10-20 完成（环境 `cloud1-d1gvx0dpzae6aede6`，免费体验版）
+2. ~~**部署 login 云函数**：微信开发者工具中右键 `miniapp/cloud/functions/login` →「上传并部署：云端安装依赖」~~ ✅ 2026-10-20 完成（需先在 `functions` 根目录右键「当前环境」绑定环境）
+3. ~~**小程序端启用**：`miniapp/src/config/cloud.ts` 填入 `ENV_ID`；`miniapp/src/storage/index.ts` 置 `USE_CLOUD = true`~~ ✅ 2026-10-20 完成
+4. **Web 端启用（可选，独立云环境，未启用）**：
    - 腾讯云 CloudBase 控制台开通环境、开启**匿名登录**、添加部署域名为安全域名
    - `web/.env.production` 填入 `VITE_CLOUDBASE_ENV`；`web/src/storage/index.ts` 置 `USE_CLOUD = true`
    - 集合 `assessment_records` 安全规则按 `auth.uid` 隔离（详见 .env.production 注释）
-5. **成本**：在云开发免费额度内（2GB 数据库 / 50 万次云函数调用/月）仍为 **0 元/年**
+5. **成本**：免费体验期内 **0 元**（40,000 资源点/月，6 个月；到期后基础套餐 ¥19.9/月，见本章顶部注意事项）
 
 ---
 

@@ -3,7 +3,7 @@
   "cloudfunctionRoot": "cloud/functions/",
   "projectname": "scorad-miniapp",
   "description": "SCORAD 评估工具",
-  "appid": "wx477730bb0bc9bd31",
+  "appid": "wxcd0bf9b1be4f8507",
   "setting": {
     "urlCheck": false,
     "es6": true,

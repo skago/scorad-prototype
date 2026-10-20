@@ -7,8 +7,8 @@ import { WxStorageAdapter } from './WxStorageAdapter'
 import { CloudStorageAdapter } from './CloudStorageAdapter'
 import type { StorageAdapter } from './types'
 
-// 升级方案 B 时改为 true（对接微信云开发；同时需在 config/cloud.ts 填入 ENV_ID）
-const USE_CLOUD = false
+// 方案 B 已启用（2026-10-20 开通微信云开发免费环境 cloud1-d1gvx0dpzae6aede6）
+const USE_CLOUD = true
 
 let instance: StorageAdapter
 
