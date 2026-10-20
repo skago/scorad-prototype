@@ -14,6 +14,7 @@
         :min="0"
         :max="10"
         :step="0.1"
+        :precision="1"
         show-input
         input-size="small"
       />
@@ -29,6 +30,7 @@
         :min="0"
         :max="10"
         :step="0.1"
+        :precision="1"
         show-input
         input-size="small"
       />

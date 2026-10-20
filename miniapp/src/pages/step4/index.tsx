@@ -5,6 +5,9 @@ import { useAssessStore } from '@/stores/assessStore'
 export default function Step4() {
   const { state, set, subjective_c, doCalculate } = useAssessStore()
 
+  // slider 拖动返回值存在浮点误差（如 2.8000000000000003），统一钳制到 1 位小数
+  const round1 = (v: number) => Math.round(v * 10) / 10
+
   function onCalculate() {
     try {
       doCalculate()
@@ -30,7 +33,7 @@ export default function Step4() {
             max={10}
             step={0.1}
             value={state.pruritus}
-            onChange={(e) => set({ pruritus: e.detail.value })}
+            onChange={(e) => set({ pruritus: round1(e.detail.value) })}
             activeColor='#1565c0'
             blockColor='#1565c0'
           />
@@ -46,7 +49,7 @@ export default function Step4() {
             max={10}
             step={0.1}
             value={state.sleep_loss}
-            onChange={(e) => set({ sleep_loss: e.detail.value })}
+            onChange={(e) => set({ sleep_loss: round1(e.detail.value) })}
             activeColor='#1565c0'
             blockColor='#1565c0'
           />
