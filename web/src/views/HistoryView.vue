@@ -81,13 +81,13 @@
 import { onMounted, onUnmounted, ref, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import * as echarts from 'echarts'
 import { useRecordStore } from '@/stores/recordStore'
 import { useAssessStore } from '@/stores/assessStore'
 import { SEVERITY_LABEL, type Severity } from '@/engine'
 import { exportRecordsCsv, downloadJson, importRecordsFromCsv, validateRecords, type ValidationIssue } from '@/utils/csv'
 import { getOrCreateUserId } from '@/utils/uuid'
 import type { AssessmentRecord } from '@/storage'
+import type { ECharts } from '@/utils/historyChart'
 
 const router = useRouter()
 const recordStore = useRecordStore()
@@ -97,7 +97,7 @@ const validationIssues = ref<ValidationIssue[]>([])
 const validated = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 const chartRef = ref<HTMLDivElement | null>(null)
-let chartInstance: echarts.ECharts | null = null
+let chartInstance: ECharts | null = null
 
 onMounted(async () => {
   await recordStore.loadRecords()
@@ -117,10 +117,16 @@ function refreshRecords() {
 
 watch(records, () => nextTick(renderChart), { deep: true })
 
-function renderChart() {
-  if (!chartRef.value || records.value.length < 2) return
+async function renderChart() {
+  if (!chartRef.value || records.value.length < 2) {
+    chartInstance?.dispose()
+    chartInstance = null
+    return
+  }
   if (!chartInstance) {
-    chartInstance = echarts.init(chartRef.value)
+    const { createHistoryChart } = await import('@/utils/historyChart')
+    if (!chartRef.value || records.value.length < 2) return
+    if (!chartInstance) chartInstance = createHistoryChart(chartRef.value)
   }
   // 按时间升序排列
   const sorted = [...records.value].sort((a, b) => a.assessed_at.localeCompare(b.assessed_at))
