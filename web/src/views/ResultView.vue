@@ -50,7 +50,8 @@
     </div>
 
     <div class="actions">
-      <el-button type="primary" :disabled="!assess.result" @click="onSave">保存记录</el-button>
+      <el-button type="primary" :disabled="!assess.result" @click="onSaveAndNext">保存并再评一位</el-button>
+      <el-button :disabled="!assess.result" @click="onSave">保存并查看历史</el-button>
       <el-dropdown :disabled="!assess.result" @command="onExport">
         <el-button :disabled="!assess.result">导出</el-button>
         <template #dropdown>
@@ -111,6 +112,15 @@ async function onSave() {
   await assess.saveRecord()
   ElMessage.success('已保存到本地')
   router.push('/history')
+}
+
+/** 保存并再评一位（连续评估场景）：保存后清空状态，回到第一步 */
+async function onSaveAndNext() {
+  if (!assess.result) return
+  await assess.saveRecord()
+  ElMessage.success('已保存到本地')
+  assess.reset()
+  router.push('/assess/step1')
 }
 
 function onExport(command: string) {

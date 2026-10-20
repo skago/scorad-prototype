@@ -10,7 +10,7 @@ import { exportRecordsAsCsv, exportRecordsAsJson } from '@/utils/fileExport'
 export default function History() {
   const [records, setRecords] = useState<AssessmentRecord[]>([])
   const [filterSubject, setFilterSubject] = useState('')
-  const { loadRecord } = useAssessStore()
+  const { loadRecord, reset } = useAssessStore()
 
   /** 全部记录中出现过的受试者筛选号（去重，供 Picker 选择） */
   const subjects = useMemo(() => {
@@ -68,11 +68,21 @@ export default function History() {
     Taro.navigateTo({ url: `/pages/trend/index?subject=${encodeURIComponent(filterSubject)}` })
   }
 
+  /** 开始新评估：清空可能残留的评估状态，重开第一步（清页面栈） */
+  function onNewAssessment() {
+    reset()
+    Taro.reLaunch({ url: '/pages/step1/index' })
+  }
+
   return (
     <View className='container'>
       <View className='card'>
         <Text className='page-title'>历史记录</Text>
         <Text className='desc'>共 {filteredRecords.length} 条记录{filterSubject ? `（筛选：${filterSubject}）` : ''}</Text>
+
+        <View className='actions'>
+          <Button className='btn-primary' onClick={onNewAssessment}>新评估</Button>
+        </View>
 
         {subjects.length > 0 && (
           <View className='actions' style={{ display: 'flex', alignItems: 'center', gap: '16rpx' }}>
@@ -131,7 +141,7 @@ export default function History() {
         )}
 
         <View className='actions'>
-          <Button className='btn-default' onClick={() => Taro.navigateBack()}>返回</Button>
+          <Button className='btn-default' onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>返回首页</Button>
         </View>
       </View>
     </View>

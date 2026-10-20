@@ -1,13 +1,37 @@
 import { View, Text, Button, Input, Radio, RadioGroup } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { useState } from 'react'
 import { useAssessStore } from '@/stores/assessStore'
 
 export default function Step2() {
   const { state, set, bodyParts, bsa_mode, extent_a, validateStep2, saveDraft, setBsaMode } = useAssessStore()
+  // 输入中间态：保留原始输入串，避免受控回显吞掉小数点（如 "10." 被 parseFloat 成 10）
+  const [inputs, setInputs] = useState<Record<string, string>>({})
 
-  function onPartChange(key: string, value: string) {
-    const num = parseFloat(value) || 0
-    set({ [key]: num } as never)
+  function onPartChange(key: string, max: number, value: string) {
+    // 仅允许整数部分最多 3 位、小数点后最多 1 位（对齐 web 端 precision: 1）
+    if (value !== '' && !/^\d{0,3}(\.\d?)?$/.test(value)) return
+    const num = parseFloat(value)
+    if (!isNaN(num) && num > max) {
+      // 超上限立即钳制
+      set({ [key]: max } as never)
+      setInputs((prev) => ({ ...prev, [key]: String(max) }))
+      return
+    }
+    setInputs((prev) => ({ ...prev, [key]: value }))
+    if (!isNaN(num)) set({ [key]: num } as never)
+  }
+
+  function onPartBlur(key: string, max: number) {
+    const raw = inputs[key]
+    if (raw === undefined) return
+    const num = Math.min(Math.max(parseFloat(raw) || 0, 0), max)
+    set({ [key]: Math.round(num * 10) / 10 } as never)
+    setInputs((prev) => {
+      const next = { ...prev }
+      delete next[key]
+      return next
+    })
   }
 
   async function onNext() {
@@ -50,8 +74,9 @@ export default function Step2() {
               <Input
                 className='part-input'
                 type='digit'
-                value={String((state as unknown as Record<string, number>)[part.key])}
-                onInput={(e) => onPartChange(part.key, e.detail.value)}
+                value={inputs[part.key] ?? String((state as unknown as Record<string, number>)[part.key])}
+                onInput={(e) => onPartChange(part.key, part.max, e.detail.value)}
+                onBlur={() => onPartBlur(part.key, part.max)}
               />
               <Text className='unit'>%</Text>
             </View>

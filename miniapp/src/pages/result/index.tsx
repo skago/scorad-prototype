@@ -18,6 +18,17 @@ export default function Result() {
       .catch((e) => Taro.showToast({ title: e.message, icon: 'none' }))
   }
 
+  /** 保存并评估下一位（连续评估场景）：保存后清空状态，重开第一步 */
+  function onSaveAndNext() {
+    saveRecord()
+      .then(() => {
+        Taro.showToast({ title: '已保存', icon: 'success' })
+        reset()
+        setTimeout(() => Taro.reLaunch({ url: '/pages/step1/index' }), 400)
+      })
+      .catch((e) => Taro.showToast({ title: e.message, icon: 'none' }))
+  }
+
   /** 构造临时导出记录（未保存也可导出，不落库） */
   function buildTempRecord(): AssessmentRecord | null {
     if (!state.result) return null
@@ -125,10 +136,13 @@ export default function Result() {
         </View>
 
         <View className='actions'>
-          <Button className='btn-primary' onClick={onSave}>保存记录</Button>
+          <Button className='btn-primary' onClick={onSaveAndNext}>保存并评估下一位</Button>
         </View>
         <View className='actions'>
+          <Button className='btn-default' onClick={onSave}>保存并查看历史</Button>
           <Button className='btn-default' onClick={onExport}>导出本条</Button>
+        </View>
+        <View className='actions'>
           <Button className='btn-default' onClick={onReset}>重新评估</Button>
           <Button className='btn-default' onClick={() => Taro.navigateBack()}>返回</Button>
         </View>
